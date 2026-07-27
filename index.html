@@ -315,54 +315,7 @@ function searchCity(q) {
     }
     if (matches.length >= 30) break;
   }
-    if (matches.length === 0) {
-    var lm = [];
-    for (var t = 0; t < longDistData.length; t++) {
-      var txt = longDistData[t];
-      if (txt.indexOf("???") >= 0 || txt.indexOf("??") >= 0) continue;
-      var nums = txt.match(/\d+/g);
-      if (!nums || !nums[0]) continue;
-      var price = parseInt(nums[0]);
-      var pname = txt.split(/\d+/)[0].replace("??","").replace("?","").trim();
-      if (!pname || pname.length < 2) continue;
-      if (pname.indexOf(q) >= 0 || txt.indexOf(q) >= 0) {
-        var note = "";
-        var nm = txt.match(/[?(][^?)]*[?)]/);
-        if (nm) note = nm[0];
-        lm.push({province: pname, price: price, note: note});
-      }
-    }
-    if (lm.length > 0) {
-      res.innerHTML = lm.map(function(p) {
-        var dn = p.note ? '<br><span style="font-size:11px;color:#999">' + p.note + '</span>' : '';
-        return '<div class="item" onclick="selLP(\'' + p.province + '\',' + p.price + ')\"'><span><span style="background:#ff6b00;color:#fff;border-radius:3px;padding:1px 5px;font-size:11px;margin-right:4px">??</span>' + p.province + dn + '</span><span class="price">' + p.price + '?</span></div>';
-      }).join('');
-    } else {
-      res.innerHTML = '<div class="item" style="color:#888;cursor:default;">????????</div>';
-    }
-  }} else {
-      res.innerHTML = '<div class="item" style="color:#888;cursor:default;">\u672a\u627e\u5230\uff0c\u8bd5\u8bd5\u7701\u540d</div>';
-    }
-  }} else {
-    selectedCap = { capacity: cap, cost: cost };
-  }
-  renderCapGrid();
-  updateSummary();
-}
-
-function updateSummary() {
-  const v = vehiclesData[selectedVehicle];
-  const vc = v ? v.vehicle_cost : 0;
-  const bc = selectedCap ? selectedCap.cost : 0;
-  const freight = selectedCity ? selectedCity.price : 0;
-  document.getElementById('csVehicle').textContent = vc + ' 元';
-  document.getElementById('csBattery').textContent = selectedCap ? bc + ' 元' : '未选';
-  document.getElementById('csSubtotal').textContent = (vc + bc) + ' 元';
-  updateTotal();
-}
-
-var _LONG_PROVS = [{"province": "江西全境", "price": 800, "note": ""}, {"province": "福建全境", "price": 900, "note": ""}, {"province": "广东全境", "price": 1100, "note": ""}, {"province": "广西全境", "price": 1200, "note": ""}, {"province": "海南全境", "price": 2200, "note": ""}, {"province": "湖南全境", "price": 1100, "note": ""}, {"province": "四川全境", "price": 1100, "note": ""}, {"province": "重庆全境", "price": 1100, "note": ""}, {"province": "青海", "price": 1700, "note": ""}, {"province": "贵州全境", "price": 1200, "note": ""}, {"province": "云南全境", "price": 1700, "note": ""}, {"province": "辽宁全境", "price": 1200, "note": ""}, {"province": "吉林全境", "price": 1300, "note": ""}, {"province": "黑龙江全境", "price": 1800, "note": ""}, {"province": "内蒙", "price": 1300, "note": ""}, {"province": "宁夏", "price": 1300, "note": ""}, {"province": "甘肃", "price": 1300, "note": ""}, {"province": "金豆 ，", "price": 3, "note": ""}];
-function searchCity(q) {
+    function searchCity(q) {
   if (window._sel) { return; }
   const res = document.getElementById('searchResults');
   if (q.length < 1) { res.style.display = 'none'; return; }
