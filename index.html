@@ -188,6 +188,20 @@ function selectLongProvince(prov, price) {
   setTimeout(function(){ window._sel = false; }, 300);
 }
 
+
+function selectLongProvince(prov, price) {
+  window._sel = true;
+  selectedCity = { province: prov + '(??)', city: prov + '??', price: price, isLong: true };
+  document.getElementById('citySearch').value = prov;
+  document.getElementById('searchResults').style.display = 'none';
+  document.getElementById('citySelected').style.display = 'flex';
+  document.getElementById('csProvince').textContent = prov + '(??)';
+  document.getElementById('csCity').textContent = prov + '??';
+  document.getElementById('csPrice').textContent = price + ' ?';
+  updateSummary();
+  setTimeout(function(){ window._sel = false; }, 300);
+}
+
 function loadData() {
   vehiclesData = window.__DATA__.vehicles;
   allCities = {};
@@ -277,6 +291,7 @@ function updateSummary() {
   updateTotal();
 }
 
+var _LONG_PROVS = [{"province": "江西全境", "price": 800, "note": ""}, {"province": "福建全境", "price": 900, "note": ""}, {"province": "广东全境", "price": 1100, "note": ""}, {"province": "广西全境", "price": 1200, "note": ""}, {"province": "海南全境", "price": 2200, "note": ""}, {"province": "湖南全境", "price": 1100, "note": ""}, {"province": "四川全境", "price": 1100, "note": ""}, {"province": "重庆全境", "price": 1100, "note": ""}, {"province": "青海", "price": 1700, "note": ""}, {"province": "贵州全境", "price": 1200, "note": ""}, {"province": "云南全境", "price": 1700, "note": ""}, {"province": "辽宁全境", "price": 1200, "note": ""}, {"province": "吉林全境", "price": 1300, "note": ""}, {"province": "黑龙江全境", "price": 1800, "note": ""}, {"province": "内蒙", "price": 1300, "note": ""}, {"province": "宁夏", "price": 1300, "note": ""}, {"province": "甘肃", "price": 1300, "note": ""}, {"province": "金豆 ，", "price": 3, "note": ""}];
 function searchCity(q) {
   if (window._sel) { return; }
   const res = document.getElementById('searchResults');
