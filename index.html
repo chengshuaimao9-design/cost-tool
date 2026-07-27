@@ -303,7 +303,6 @@ function updateSummary() {
   updateTotal();
 }
 
-var _LONG_PROVS = [{"province": "江西全境", "price": 800, "note": ""}, {"province": "福建全境", "price": 900, "note": ""}, {"province": "广东全境", "price": 1100, "note": ""}, {"province": "广西全境", "price": 1200, "note": ""}, {"province": "海南全境", "price": 2200, "note": ""}, {"province": "湖南全境", "price": 1100, "note": ""}, {"province": "四川全境", "price": 1100, "note": ""}, {"province": "重庆全境", "price": 1100, "note": ""}, {"province": "青海", "price": 1700, "note": ""}, {"province": "贵州全境", "price": 1200, "note": ""}, {"province": "云南全境", "price": 1700, "note": ""}, {"province": "辽宁全境", "price": 1200, "note": ""}, {"province": "吉林全境", "price": 1300, "note": ""}, {"province": "黑龙江全境", "price": 1800, "note": ""}, {"province": "内蒙", "price": 1300, "note": ""}, {"province": "宁夏", "price": 1300, "note": ""}, {"province": "甘肃", "price": 1300, "note": ""}, {"province": "金豆 ，", "price": 3, "note": ""}];
 function searchCity(q) {
   if (window._sel) { return; }
   const res = document.getElementById('searchResults');
@@ -315,24 +314,31 @@ function searchCity(q) {
     }
     if (matches.length >= 30) break;
   }
-    function searchCity(q) {
-  if (window._sel) { return; }
-  const res = document.getElementById('searchResults');
-  if (q.length < 1) { res.style.display = 'none'; return; }
-  const matches = [];
-  for (const [k, info] of Object.entries(allCities)) {
-    if (info.city.includes(q) || info.province.includes(q)) {
-      matches.push(info);
-    }
-    if (matches.length >= 30) break;
-  }
   if (matches.length === 0) {
-    let found = false;
-    for (const txt of longDistData) {
-      if (txt.includes(q)) { res.innerHTML = '<div class="item" style="color:#888;cursor:default;">长途参考：' + txt + '</div>'; found = true; break; }
+    var lp = window.__DATA__._lp || (function(){
+  var a=[]; var r=window.__DATA__.shipping_long||[];
+  for(var t=0;t<r.length;t++){
+    var x=r[t];
+    if(x.indexOf('\u7c73\u4e4b\u5185')>=0||x.indexOf('\u91d1\u8c46')>=0) continue;
+    var ns=x.match(/\d+/g); if(!ns||!ns[0]) continue;
+    var pr=parseInt(ns[0]);
+    var pn=x.split(/\d+/)[0].replace('\u5168\u5883','').replace('\u5143','').trim();
+    if(!pn||pn.length<2) continue;
+    var nt=''; var nm=x.match(/[\uff08(][^\uff09)]*[\uff09)]/); if(nm) nt=nm[0];
+    a.push({province:pn,price:pr,note:nt});
+  }
+  window.__DATA__._lp=a; return a;
+})();
+    var lpMatch = lp.filter(function(x){return x.province.indexOf(q)>=0||x.note.indexOf(q)>=0;});
+    if(lpMatch.length>0){
+      res.innerHTML = lpMatch.map(function(p){
+        var dn = p.note ? '<br><span style="font-size:11px;color:#999">'+p.note+'</span>' : '';
+        return '<div class="item" onclick="selLP(\''+p.province+'\','+p.price+')"><span><span style="background:#ff6b00;color:#fff;border-radius:3px;padding:1px 5px;font-size:11px;margin-right:4px">\u957f\u9014</span>'+p.province+dn+'</span><span class="price">'+p.price+'\u5143</span></div>';
+      }).join('');
+    } else {
+      res.innerHTML = '<div class="item" style="color:#888;cursor:default;">\u672a\u627e\u5230\uff0c\u8bd5\u8bd5\u7701\u540d</div>';
     }
-    if (!found) res.innerHTML = '<div class="item" style="color:#888;cursor:default;">未找到，试试省名</div>';
-  } else {
+  }} else {
     res.innerHTML = matches.map(m =>
       '<div class="item" onclick="selectCity(\'' + m.province + '\',\'' + m.city + '\',' + m.price + ')">' +
         '<span>' + m.province + ' · ' + m.city + '</span>' +
