@@ -264,6 +264,7 @@ function updateSummary() {
 }
 
 function searchCity(q) {
+  if (window._sel) { return; }
   const res = document.getElementById('searchResults');
   if (q.length < 1) { res.style.display = 'none'; return; }
   const matches = [];
@@ -302,6 +303,7 @@ function selectCity(prov, city, price) {
 }
 
 function clearCity() {
+  window._sel = true;
   selectedCity = null;
   document.getElementById('citySearch').value = '';
   document.getElementById('citySelected').style.display = 'none';
