@@ -175,37 +175,14 @@ let selectedChem = null;
 let selectedCap = null;
 
 
-;
-  document.getElementById('citySearch').value = prov;
-  document.getElementById('searchResults').style.display = 'none';
-  document.getElementById('citySelected').style.display = 'flex';
-  document.getElementById('csProvince').textContent = prov + '(·)';
-  document.getElementById('csCity').textContent = prov + '·';
-  document.getElementById('csPrice').textContent = price + ' ?';
-  updateSummary();
-  setTimeout(function(){ window._sel = false; }, 300);
-
-
-
-;
-  document.getElementById('citySearch').value = prov;
-  document.getElementById('searchResults').style.display = 'none';
-  document.getElementById('citySelected').style.display = 'flex';
-  document.getElementById('csProvince').textContent = prov + '(·)';
-  document.getElementById('csCity').textContent = prov + '·';
-  document.getElementById('csPrice').textContent = price + ' ?';
-  updateSummary();
-  setTimeout(function(){ window._sel = false; }, 300);
-
-
-function selLP(p, pr) {
+function selshortcut(p, pr) {
   window._sel = true;
-  selectedCity = {province:p+"(·)",city:p+"·",price:pr,isLong:true};
+  selectedCity = {province:p+"(??)",city:p+"??",price:pr,isLong:true};
   document.getElementById("citySearch").value = p;
   document.getElementById("searchResults").style.display = "none";
   document.getElementById("citySelected").style.display = "flex";
-  document.getElementById("csProvince").textContent = p + "(·)";
-  document.getElementById("csCity").textContent = p + "·";
+  document.getElementById("csProvince").textContent = p + "(??)";
+  document.getElementById("csCity").textContent = p + "??";
   document.getElementById("csPrice").textContent = pr + " ?";
   updateSummary();
   setTimeout(function(){window._sel=false;},300);
@@ -300,7 +277,6 @@ function updateSummary() {
 }
 
 function searchCity(q) {
-  if (window._sel) { return; }
   const res = document.getElementById('searchResults');
   if (q.length < 1) { res.style.display = 'none'; return; }
   const matches = [];
@@ -311,45 +287,39 @@ function searchCity(q) {
     if (matches.length >= 30) break;
   }
   if (matches.length === 0) {
-    var lp = window.__DATA__._lp || (function(){
-      var a=[],r=window.__DATA__.shipping_long||[];
-      for(var t=0;t<r.length;t++){
-        var x=r[t];
-        if(x.indexOf("???")>=0||x.indexOf("??")>=0) continue;
-        var ns=x.match(/\d+/g); if(!ns||!ns[0]) continue;
-        var pr=parseInt(ns[0]);
-        var pn=x.split(/\d+/)[0].replace("??","").replace("?","").trim();
-        if(!pn||pn.length<2) continue;
-        var nt=""; var nm=x.match(/[?(][^?)]*[?)]/); if(nm) nt=nm[0];
-        a.push({province:pn,price:pr,note:nt});
+    var _lp = window.__LP__ || (function(){
+      var _a=[],_r=window.__DATA__.shipping_long||[];
+      for(var _t=0;_t<_r.length;_t++){
+        var _x=_r[_t];
+        if(_x.indexOf("\u7c73\u4e4b\u5185")>=0||_x.indexOf("\u91d1\u8c46")>=0) continue;
+        var _ns=_x.match(/\d+/g); if(!_ns||!_ns[0]) continue;
+        var _pr=parseInt(_ns[0]);
+        var _pn=_x.split(/\d+/)[0].replace("\u5168\u5883","").replace("\u5143","").trim();
+        if(!_pn||_pn.length<2) continue;
+        var _nt=""; var _nm=_x.match(/[\uff08(][^\uff09)]*[\uff09)]/); if(_nm) _nt=_nm[0];
+        _a.push({p:_pn,pr:_pr,nt:_nt});
       }
-      window.__DATA__._lp=a; return a;
+      window.__LP__=_a; return _a;
     })();
-    var lm = lp.filter(function(x){ return x.province.indexOf(q)>=0||x.note.indexOf(q)>=0; });
-    if(lm.length>0){
-      res.innerHTML = lm.map(function(p){
-        var dn = p.note ? '<br><span style="font-size:11px;color:#999">'+p.note+'</span>' : '';
-        return '<div class="item" onclick="selLP(\''+p.province+'\','+p.price+')"><span><span style="background:#ff6b00;color:#fff;border-radius:3px;padding:1px 5px;font-size:11px;margin-right:4px">??</span>'+p.province+dn+'</span><span class="price">'+p.price+'?</span></div>';
+    var _lm=_lp.filter(function(x){return x.p.indexOf(q)>=0||x.nt.indexOf(q)>=0;});
+    if(_lm.length>0){
+      res.innerHTML=_lm.map(function(x){
+        var dn=x.nt?'<br><span style=\"font-size:11px;color:#999\">'+x.nt+'</span>':'';
+        return '<div class=\"item\" onclick=\"selshortcut(\\''+x.p+'\\','+x.pr+')\"><span><span style=\"background:#ff6b00;color:#fff;border-radius:3px;padding:1px 5px;font-size:11px;margin-right:4px\">\u957f\u9014</span>'+x.p+dn+'</span><span class=\"price\">'+x.pr+'\u5143</span></div>';
       }).join('');
     } else {
-      res.innerHTML = '<div class="item" style="color:#888;cursor:default;">????????</div>';
+      res.innerHTML='<div class=\"item\" style=\"color:#888;cursor:default;\">\u672a\u627e\u5230\uff0c\u8bd5\u8bd5\u7701\u540d</div>';
     }
   }} else {
-      res.innerHTML = '<div class="item" style="color:#888;cursor:default;">\u672a\u627e\u5230\uff0c\u8bd5\u8bd5\u7701\u540d</div>';
-    }
-  } else {
-      res.innerHTML = '<div class="item" style="color:#888;cursor:default;">????????</div>';
-    
-  } else {
     res.innerHTML = matches.map(m =>
       '<div class="item" onclick="selectCity(\'' + m.province + '\',\'' + m.city + '\',' + m.price + ')">' +
         '<span>' + m.province + ' · ' + m.city + '</span>' +
         '<span class="price">' + m.price + '元</span>' +
       '</div>'
     ).join('');
-  
+  }
   res.style.display = 'block';
-
+}
 
 function selectCity(prov, city, price) {
   selectedCity = { province: prov, city: city, price: price };
