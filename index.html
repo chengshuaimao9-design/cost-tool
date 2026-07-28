@@ -174,6 +174,19 @@ let selectedVehicle = '四门';
 let selectedChem = null;
 let selectedCap = null;
 
+
+function pickProvince(n,p){
+  window._busy=true;
+  selectedCity={province:n+"(??)",city:n,price:p};
+  document.getElementById("citySearch").value=n;
+  document.getElementById("searchResults").style.display="none";
+  document.getElementById("citySelected").style.display="flex";
+  document.getElementById("csProvince").textContent=n+"(??)";
+  document.getElementById("csCity").textContent=n+"??";
+  document.getElementById("csPrice").textContent=p+" ?";
+  updateSummary();
+  setTimeout(function(){window._busy=false;},300);
+}
 function loadData() {
   vehiclesData = window.__DATA__.vehicles;
   allCities = {};
@@ -274,12 +287,27 @@ function searchCity(q) {
     if (matches.length >= 30) break;
   }
   if (matches.length === 0) {
-    let found = false;
-    for (const txt of longDistData) {
-      if (txt.includes(q)) { res.innerHTML = '<div class="item" style="color:#888;cursor:default;">长途参考：' + txt + '</div>'; found = true; break; }
+    var d=window.__DATA__.shipping_long||[],lp=[];
+    for(var i=0;i<d.length;i++){
+      var x=d[i];
+      if(x.indexOf("???")>=0||x.indexOf("??")>=0)continue;
+      var m=x.match(/\d+/);
+      if(!m)continue;
+      var pr=parseInt(m[0]);
+      var nm=x.split(/\d+/)[0].replace("??","").replace("?","").trim();
+      if(!nm||nm.length<2)continue;
+      var nt="";var t=x.match(/[?(][^?)]*[?)]/);if(t)nt=t[0];
+      if(nm.indexOf(q)>=0||nt.indexOf(q)>=0)lp.push({n:nm,p:pr,nt:nt});
     }
-    if (!found) res.innerHTML = '<div class="item" style="color:#888;cursor:default;">未找到，试试省名</div>';
-  } else {
+    if(lp.length){
+      res.innerHTML=lp.map(function(v){
+        var d=v.nt?'<br><span style="font-size:11px;color:#999">'+v.nt+'</span>':'';
+        return '<div class="item" onclick="pickProvince(\''+v.n+'\','+v.p+')"><span><span style="background:#ff6b00;color:#fff;border-radius:3px;padding:1px 5px;font-size:11px;margin-right:4px">??</span>'+v.n+d+'</span><span class="price">'+v.p+'?</span></div>';
+      }).join('');
+    }else{
+      res.innerHTML='<div class="item" style="color:#888;cursor:default;">????????</div>';
+    }
+  }} else {
     res.innerHTML = matches.map(m =>
       '<div class="item" onclick="selectCity(\'' + m.province + '\',\'' + m.city + '\',' + m.price + ')">' +
         '<span>' + m.province + ' · ' + m.city + '</span>' +
