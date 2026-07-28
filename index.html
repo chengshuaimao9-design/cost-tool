@@ -184,7 +184,7 @@ let selectedCap = null;
   document.getElementById('csPrice').textContent = price + ' ?';
   updateSummary();
   setTimeout(function(){ window._sel = false; }, 300);
-}
+
 
 
 ;
@@ -196,7 +196,7 @@ let selectedCap = null;
   document.getElementById('csPrice').textContent = price + ' ?';
   updateSummary();
   setTimeout(function(){ window._sel = false; }, 300);
-}
+
 
 function selLP(p, pr) {
   window._sel = true;
@@ -315,12 +315,12 @@ function searchCity(q) {
       var a=[],r=window.__DATA__.shipping_long||[];
       for(var t=0;t<r.length;t++){
         var x=r[t];
-        if(x.indexOf('\u7c73\u4e4b\u5185')>=0||x.indexOf('\u91d1\u8c46')>=0) continue;
+        if(x.indexOf("???")>=0||x.indexOf("??")>=0) continue;
         var ns=x.match(/\d+/g); if(!ns||!ns[0]) continue;
         var pr=parseInt(ns[0]);
-        var pn=x.split(/\d+/)[0].replace('\u5168\u5883','').replace('\u5143','').trim();
+        var pn=x.split(/\d+/)[0].replace("??","").replace("?","").trim();
         if(!pn||pn.length<2) continue;
-        var nt=''; var nm=x.match(/[\uff08(][^\uff09)]*[\uff09)]/); if(nm) nt=nm[0];
+        var nt=""; var nm=x.match(/[?(][^?)]*[?)]/); if(nm) nt=nm[0];
         a.push({province:pn,price:pr,note:nt});
       }
       window.__DATA__._lp=a; return a;
@@ -329,14 +329,17 @@ function searchCity(q) {
     if(lm.length>0){
       res.innerHTML = lm.map(function(p){
         var dn = p.note ? '<br><span style="font-size:11px;color:#999">'+p.note+'</span>' : '';
-        return '<div class="item" onclick="selLP(\''+p.province+'\','+p.price+')"><span><span style="background:#ff6b00;color:#fff;border-radius:3px;padding:1px 5px;font-size:11px;margin-right:4px">\u957f\u9014</span>'+p.province+dn+'</span><span class="price">'+p.price+'\u5143</span></div>';
+        return '<div class="item" onclick="selLP(\''+p.province+'\','+p.price+')"><span><span style="background:#ff6b00;color:#fff;border-radius:3px;padding:1px 5px;font-size:11px;margin-right:4px">??</span>'+p.province+dn+'</span><span class="price">'+p.price+'?</span></div>';
       }).join('');
     } else {
-      res.innerHTML = '<div class="item" style="color:#888;cursor:default;">\u672a\u627e\u5230\uff0c\u8bd5\u8bd5\u7701\u540d</div>';
-    }
-  }} else {
       res.innerHTML = '<div class="item" style="color:#888;cursor:default;">????????</div>';
     }
+  }} else {
+      res.innerHTML = '<div class="item" style="color:#888;cursor:default;">\u672a\u627e\u5230\uff0c\u8bd5\u8bd5\u7701\u540d</div>';
+    }
+  } else {
+      res.innerHTML = '<div class="item" style="color:#888;cursor:default;">????????</div>';
+    
   } else {
     res.innerHTML = matches.map(m =>
       '<div class="item" onclick="selectCity(\'' + m.province + '\',\'' + m.city + '\',' + m.price + ')">' +
@@ -344,9 +347,9 @@ function searchCity(q) {
         '<span class="price">' + m.price + '元</span>' +
       '</div>'
     ).join('');
-  }
+  
   res.style.display = 'block';
-}
+
 
 function selectCity(prov, city, price) {
   selectedCity = { province: prov, city: city, price: price };
