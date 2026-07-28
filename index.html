@@ -174,19 +174,7 @@ let selectedVehicle = '四门';
 let selectedChem = null;
 let selectedCap = null;
 
-
-function pickProvince(n,p){
-  window._busy=true;
-  selectedCity={province:n+"(??)",city:n,price:p};
-  document.getElementById("citySearch").value=n;
-  document.getElementById("searchResults").style.display="none";
-  document.getElementById("citySelected").style.display="flex";
-  document.getElementById("csProvince").textContent=n+"(??)";
-  document.getElementById("csCity").textContent=n+"??";
-  document.getElementById("csPrice").textContent=p+" ?";
-  updateSummary();
-  setTimeout(function(){window._busy=false;},300);
-}
+function pickProvince(n,p){window._busy=true;selectedCity={province:n+"(??)",city:n,price:p};document.getElementById("citySearch").value=n;document.getElementById("searchResults").style.display="none";document.getElementById("citySelected").style.display="flex";document.getElementById("csProvince").textContent=n+"(??)";document.getElementById("csCity").textContent=n+"??";document.getElementById("csPrice").textContent=p+" ?";updateSummary();setTimeout(function(){window._busy=false;},300);}
 function loadData() {
   vehiclesData = window.__DATA__.vehicles;
   allCities = {};
@@ -307,7 +295,7 @@ function searchCity(q) {
     }else{
       res.innerHTML='<div class="item" style="color:#888;cursor:default;">????????</div>';
     }
-  }} else {
+  } else {
     res.innerHTML = matches.map(m =>
       '<div class="item" onclick="selectCity(\'' + m.province + '\',\'' + m.city + '\',' + m.price + ')">' +
         '<span>' + m.province + ' · ' + m.city + '</span>' +
