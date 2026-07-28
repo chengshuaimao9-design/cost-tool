@@ -313,7 +313,7 @@ function searchCity(q) {
     }else{
       res.innerHTML="<div class="item" style="color:#888;cursor:default;">????????</div>";
     }
-  }} else {
+} else {
     res.innerHTML = matches.map(function(m){
       return "<div class=\"item\" data-city=\""+m.city+"\" data-prov=\""+m.province+"\" data-pr=\""+m.price+"\"><span>"+m.province+" \u00b7 "+m.city+"</span><span class=\"price\">"+m.price+"\u5143</span></div>";
     }).join('');
