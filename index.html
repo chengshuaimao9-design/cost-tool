@@ -310,7 +310,7 @@ function searchCity(q) {
     } else {
       res.innerHTML='<div class=\"item\" style=\"color:#888;cursor:default;\">\u672a\u627e\u5230\uff0c\u8bd5\u8bd5\u7701\u540d</div>';
     }
-  }} else {
+  } else {
     res.innerHTML = matches.map(m =>
       '<div class="item" onclick="selectCity(\'' + m.province + '\',\'' + m.city + '\',' + m.price + ')">' +
         '<span>' + m.province + ' · ' + m.city + '</span>' +
