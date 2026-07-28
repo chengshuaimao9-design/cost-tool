@@ -175,28 +175,24 @@ let selectedChem = null;
 let selectedCap = null;
 
 
-function selectLongProvince(prov, price) {
-  window._sel = true;
-  selectedCity = { province: prov + '(??)', city: prov + '??', price: price, isLong: true };
+;
   document.getElementById('citySearch').value = prov;
   document.getElementById('searchResults').style.display = 'none';
   document.getElementById('citySelected').style.display = 'flex';
-  document.getElementById('csProvince').textContent = prov + '(??)';
-  document.getElementById('csCity').textContent = prov + '??';
+  document.getElementById('csProvince').textContent = prov + '(·)';
+  document.getElementById('csCity').textContent = prov + '·';
   document.getElementById('csPrice').textContent = price + ' ?';
   updateSummary();
   setTimeout(function(){ window._sel = false; }, 300);
 }
 
 
-function selectLongProvince(prov, price) {
-  window._sel = true;
-  selectedCity = { province: prov + '(??)', city: prov + '??', price: price, isLong: true };
+;
   document.getElementById('citySearch').value = prov;
   document.getElementById('searchResults').style.display = 'none';
   document.getElementById('citySelected').style.display = 'flex';
-  document.getElementById('csProvince').textContent = prov + '(??)';
-  document.getElementById('csCity').textContent = prov + '??';
+  document.getElementById('csProvince').textContent = prov + '(·)';
+  document.getElementById('csCity').textContent = prov + '·';
   document.getElementById('csPrice').textContent = price + ' ?';
   updateSummary();
   setTimeout(function(){ window._sel = false; }, 300);
@@ -204,12 +200,12 @@ function selectLongProvince(prov, price) {
 
 function selLP(p, pr) {
   window._sel = true;
-  selectedCity = {province:p+"(??)",city:p+"??",price:pr,isLong:true};
+  selectedCity = {province:p+"(·)",city:p+"·",price:pr,isLong:true};
   document.getElementById("citySearch").value = p;
   document.getElementById("searchResults").style.display = "none";
   document.getElementById("citySelected").style.display = "flex";
-  document.getElementById("csProvince").textContent = p + "(??)";
-  document.getElementById("csCity").textContent = p + "??";
+  document.getElementById("csProvince").textContent = p + "(·)";
+  document.getElementById("csCity").textContent = p + "·";
   document.getElementById("csPrice").textContent = pr + " ?";
   updateSummary();
   setTimeout(function(){window._sel=false;},300);
@@ -319,10 +315,10 @@ function searchCity(q) {
   var a=[]; var r=window.__DATA__.shipping_long||[];
   for(var t=0;t<r.length;t++){
     var x=r[t];
-    if(x.indexOf('\u7c73\u4e4b\u5185')>=0||x.indexOf('\u91d1\u8c46')>=0) continue;
+    if(x.indexOf('???')>=0||x.indexOf('??')>=0) continue;
     var ns=x.match(/\d+/g); if(!ns||!ns[0]) continue;
     var pr=parseInt(ns[0]);
-    var pn=x.split(/\d+/)[0].replace('\u5168\u5883','').replace('\u5143','').trim();
+    var pn=x.split(/\d+/)[0].replace('??','').replace('?','').trim();
     if(!pn||pn.length<2) continue;
     var nt=''; var nm=x.match(/[\uff08(][^\uff09)]*[\uff09)]/); if(nm) nt=nm[0];
     a.push({province:pn,price:pr,note:nt});
@@ -333,12 +329,12 @@ function searchCity(q) {
     if(lpMatch.length>0){
       res.innerHTML = lpMatch.map(function(p){
         var dn = p.note ? '<br><span style="font-size:11px;color:#999">'+p.note+'</span>' : '';
-        return '<div class="item" onclick="selLP(\''+p.province+'\','+p.price+')"><span><span style="background:#ff6b00;color:#fff;border-radius:3px;padding:1px 5px;font-size:11px;margin-right:4px">\u957f\u9014</span>'+p.province+dn+'</span><span class="price">'+p.price+'\u5143</span></div>';
+        return '<div class="item" onclick="selLP(\''+p.province+'\','+p.price+')"><span><span style="background:#ff6b00;color:#fff;border-radius:3px;padding:1px 5px;font-size:11px;margin-right:4px">??</span>'+p.province+dn+'</span><span class="price">'+p.price+'?</span></div>';
       }).join('');
     } else {
-      res.innerHTML = '<div class="item" style="color:#888;cursor:default;">\u672a\u627e\u5230\uff0c\u8bd5\u8bd5\u7701\u540d</div>';
+      res.innerHTML = '<div class="item" style="color:#888;cursor:default;">????????</div>';
     }
-  }} else {
+  } else {
     res.innerHTML = matches.map(m =>
       '<div class="item" onclick="selectCity(\'' + m.province + '\',\'' + m.city + '\',' + m.price + ')">' +
         '<span>' + m.province + ' · ' + m.city + '</span>' +
